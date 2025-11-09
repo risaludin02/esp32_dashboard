@@ -50,7 +50,7 @@
 
   <script>
     // ======== Hubungkan ke broker MQTT publik ========
-    const client = mqtt.connect('wss://broker.test.mosquitto.org:8081/mqtt');
+    const client = mqtt.connect('wss://test.mosquitto.org:8081/mqtt');
 
     client.on('connect', () => {
       console.log("Terhubung ke broker MQTT");
@@ -75,3 +75,4 @@
 </body>
 
 </html>
+
