@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard ESP32 MQTT</title>
+
+  <!-- Memuat library MQTT.js -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f3f3f3;
+      margin-top: 50px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      width: 300px;
+      margin: 0 auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h1 { color: #333; }
+    .value {
+      font-size: 48px;
+      color: #007bff;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>ESP32 Dashboard</h1>
+    <p>Data Suhu:</p>
+    <p class="value"><span id="data">0</span> °C</p>
+
+    <button onclick="kirimPerintah('ON')">LED ON</button>
+    <button onclick="kirimPerintah('OFF')">LED OFF</button>
+
+    <p id="status">Status: <b>Belum terhubung</b></p>
+  </div>
+
+  <script>
+    // ======== Hubungkan ke broker MQTT publik ========
+    const client = mqtt.connect('wss://broker.hivemq.com:8000/mqtt');
+
+    client.on('connect', () => {
+      console.log("Terhubung ke broker MQTT");
+      document.getElementById("status").innerHTML = "Status: <b style='color:green'>Terhubung</b>";
+
+      // Subscribe topik dari ESP32
+      client.subscribe("esp32/suhu");
+    });
+
+    // ======== Saat pesan diterima ========
+    client.on('message', (topic, message) => {
+      if (topic === "esp32/suhu") {
+        document.getElementById("data").textContent = message.toString();
+      }
+    });
+
+    // ======== Kirim perintah ke ESP32 ========
+    function kirimPerintah(perintah) {
+      client.publish("esp32/command", perintah);
+    }
+  </script>
+</body>
+</html>
