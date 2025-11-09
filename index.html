@@ -50,7 +50,7 @@
 
   <script>
     // ======== Hubungkan ke broker MQTT publik ========
-    const client = mqtt.connect('wss://broker.hivemq.com:8000/mqtt');
+    const client = mqtt.connect('wss://broker.test.mosquitto.org:8081/mqtt');
 
     client.on('connect', () => {
       console.log("Terhubung ke broker MQTT");
@@ -73,4 +73,5 @@
     }
   </script>
 </body>
+
 </html>
